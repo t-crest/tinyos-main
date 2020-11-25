@@ -1,5 +1,18 @@
+### Usage with PATMOS
+
+To build and download an Application that is lcoated in the **./apps** directory, add the additional **TOSAPP**-variable to the basic **Patmos** build and download instructions. The **TOSAPP** variable has to defined with the name of the application-folder that shall be built.
+As an example call the following command in the patmos-root directory:
+
+```make BOOTAPP=bootable-bootloader APP=tinyos TOSAPP=PatmosApp tools app config gen synth download```
+
+This command generates the **Patmos** Tools, Hardware, compiles and builds the **TinyOS** application **PatmosApp**   and downloads it to the **Patmos** processor. This application is a demonstration of how **TinyOS for Patmos** is used.
+
+If the **patmos** processor is already synthesized in the FPGA-board the following command is sufficient and much faster, since it is not necessary to generate the **Patmos** processor every time a new application is flashed.
+
+```make BOOTAPP=bootable-bootloader APP=tinyos TOSAPP=PatmosApp app config download```
 
 ****
+### Official Tinyos-README
 
 **HI!**  Hey, now that I've got your attention.  Active development is occurring
 at [https://github.com/tp-freeforall/prod](https://github.com/tp-freeforall/prod)

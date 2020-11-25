@@ -46,26 +46,26 @@
 generic module AlarmToTimerC(typedef precision_tag) @safe()
 {
   provides interface Timer<precision_tag>;
-  uses interface Alarm<precision_tag,uint32_t>;
+  uses interface Alarm<precision_tag,timer_width_t>;
 }
 implementation
 {
   // there might be ways to save bytes here, but I'll do it in the obviously
   // right way for now
-  uint32_t m_dt;
+  timer_width_t m_dt;
   bool m_oneshot;
 
-  void start(uint32_t t0, uint32_t dt, bool oneshot)
+  void start(timer_width_t t0, timer_width_t dt, bool oneshot)
   {
     m_dt = dt;
     m_oneshot = oneshot;
     call Alarm.startAt(t0, dt);
   }
 
-  command void Timer.startPeriodic(uint32_t dt)
+  command void Timer.startPeriodic(timer_width_t dt)
   { start(call Alarm.getNow(), dt, FALSE); }
 
-  command void Timer.startOneShot(uint32_t dt)
+  command void Timer.startOneShot(timer_width_t dt)
   { start(call Alarm.getNow(), dt, TRUE); }
 
   command void Timer.stop()
@@ -87,19 +87,19 @@ implementation
   command bool Timer.isOneShot()
   { return m_oneshot; }
 
-  command void Timer.startPeriodicAt(uint32_t t0, uint32_t dt)
+  command void Timer.startPeriodicAt(timer_width_t t0, timer_width_t dt)
   { start(t0, dt, FALSE); }
 
-  command void Timer.startOneShotAt(uint32_t t0, uint32_t dt)
+  command void Timer.startOneShotAt(timer_width_t t0, timer_width_t dt)
   { start(t0, dt, TRUE); }
 
-  command uint32_t Timer.getNow()
+  command timer_width_t Timer.getNow()
   { return call Alarm.getNow(); }
 
-  command uint32_t Timer.gett0()
+  command timer_width_t Timer.gett0()
   { return call Alarm.getAlarm() - m_dt; }
 
-  command uint32_t Timer.getdt()
+  command timer_width_t Timer.getdt()
   { return m_dt; }
 }
 

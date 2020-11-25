@@ -1,7 +1,6 @@
-//$Id: Timer.h,v 1.6 2010-06-29 22:07:50 scipio Exp $
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.  
- * All rights reserved.
+// $Id: TimerMilliC.nc,v 1.5 2010-06-29 22:07:56 scipio Exp $
+/*
+ * Copyright (c) 2005 Stanford University. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,28 +30,25 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//@author Cory Sharp <cssharp@eecs.berkeley.edu>
+/**
+ * The virtualized millisecond timer abstraction. Instantiating this 
+ * component gives an independent millisecond granularity timer.
+ *
+ * @author Philip Levis
+ * @date   January 16 2006
+ * @see    TEP 102: Timers
+ */ 
 
-// The TinyOS Timer structures are discussed in TEP 102.
-#ifndef TIMER_H
-#define TIMER_H
+#include "Timer.h"
 
-#ifdef PATMOS_TIMER_WIDTH
-  typedef unsigned long long int timer_width_t;
-#else
-  typedef uint32_t timer_width_t;
-#endif
+generic configuration TimerMicroC() {
+  provides interface Timer<TMicro>;
+}
+implementation {
+  components TimerMicroP;
 
-// @note TSecond is an extension to be added in a successor to TEP 102
-typedef struct { int notUsed; } TSecond;
-typedef struct { int notUsed; } TMilli;
-typedef struct { int notUsed; } T32khz;
-typedef struct { int notUsed; } TMicro;
-
-#define UQ_TIMER_SECOND "HilTimerSecondC.Timer"
-#define UQ_TIMER_MILLI "HilTimerMilliC.Timer"
-#define UQ_TIMER_32KHZ "HilTimer32khzC.Timer"
-#define UQ_TIMER_MICRO "HilTimerMicroC.Timer"
-
-#endif
+  // The key to unique is based off of TimerMilliC because TimerMilliImplP
+  // is just a pass-through to the underlying HIL component (TimerMilli).
+  Timer = TimerMicroP.TimerMicro[unique(UQ_TIMER_MICRO)];
+}
 

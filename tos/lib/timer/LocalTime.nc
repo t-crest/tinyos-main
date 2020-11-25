@@ -58,6 +58,6 @@ interface LocalTime<precision_tag>
    *
    * @return Current time.
    */
-  async command uint32_t get();
+  async command timer_width_t get();
 }
 

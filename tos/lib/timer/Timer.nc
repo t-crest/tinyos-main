@@ -61,7 +61,7 @@ interface Timer<precision_tag>
    *
    * @param dt Time until the timer fires.
    */
-  command void startPeriodic(uint32_t dt);
+  command void startPeriodic(timer_width_t dt);
 
   /**
    * Set a single-short timer to some time units in the future. Replaces
@@ -70,7 +70,7 @@ interface Timer<precision_tag>
    *
    * @param dt Time until the timer fires.
    */
-  command void startOneShot(uint32_t dt);
+  command void startOneShot(timer_width_t dt);
 
   /**
    * Cancel a timer.
@@ -111,7 +111,7 @@ interface Timer<precision_tag>
    * @param t0 Base time for timer.
    * @param dt Time until the timer fires.
    */
-  command void startPeriodicAt(uint32_t t0, uint32_t dt);
+  command void startPeriodicAt(timer_width_t t0, timer_width_t dt);
 
   /**
    * Set a single-short timer to time t0+dt. Replaces any current timer
@@ -126,14 +126,14 @@ interface Timer<precision_tag>
    * @param t0 Base time for timer.
    * @param dt Time until the timer fires.
    */
-  command void startOneShotAt(uint32_t t0, uint32_t dt);
+  command void startOneShotAt(timer_width_t t0, timer_width_t dt);
 
 
   /**
    * Return the current time.
    * @return Current time.
    */
-  command uint32_t getNow();
+  command timer_width_t getNow();
 
   /**
    * Return the time anchor for the previously started timer or the time of
@@ -141,13 +141,13 @@ interface Timer<precision_tag>
    * at gett0() + getdt().
    * @return Timer's base time.
    */
-  command uint32_t gett0();
+  command timer_width_t gett0();
 
   /**
    * Return the delay or period for the previously started timer. The next
    * fired event will occur at gett0() + getdt().
    * @return Timer's interval.
    */
-  command uint32_t getdt();
+  command timer_width_t getdt();
 }
 

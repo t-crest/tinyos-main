@@ -46,11 +46,11 @@
 generic module CounterToLocalTimeC(typedef precision_tag) @safe()
 {
   provides interface LocalTime<precision_tag>;
-  uses interface Counter<precision_tag,uint32_t>;
+  uses interface Counter<precision_tag,timer_width_t>;
 }
 implementation
 {
-  async command uint32_t LocalTime.get()
+  async command timer_width_t LocalTime.get()
   {
     return call Counter.get();
   }

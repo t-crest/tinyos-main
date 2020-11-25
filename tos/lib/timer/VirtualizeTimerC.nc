@@ -58,8 +58,8 @@ implementation
 
   typedef struct
   {
-    uint32_t t0;
-    uint32_t dt;
+    timer_width_t t0;
+    timer_width_t dt;
     bool isoneshot : 1;
     bool isrunning : 1;
     bool _reserved : 6;
@@ -70,7 +70,7 @@ implementation
 
   task void updateFromTimer();
 
-  void fireTimers(uint32_t now)
+  void fireTimers(timer_width_t now)
   {
     uint16_t num;
 
@@ -80,7 +80,7 @@ implementation
 
 	if (timer->isrunning)
 	  {
-	    uint32_t elapsed = now - timer->t0;
+	    timer_width_t elapsed = now - timer->t0;
 
 	    if (elapsed >= timer->dt)
 	      {
@@ -100,10 +100,10 @@ implementation
   task void updateFromTimer()
   {
     /* This code supports a maximum dt of MAXINT. If min_remaining and
-       remaining were switched to uint32_t, and the logic changed a
+       remaining were switched to timer_width_t, and the logic changed a
        little, dt's up to 2^32-1 should work (but at a slightly higher
        runtime cost). */
-    uint32_t now = call TimerFrom.getNow();
+    timer_width_t now = call TimerFrom.getNow();
     int32_t min_remaining = (1UL << 31) - 1; /* max int32_t */
     bool min_remaining_isset = FALSE;
     uint16_t num;
@@ -116,7 +116,7 @@ implementation
 
 	if (timer->isrunning)
 	  {
-	    uint32_t elapsed = now - timer->t0;
+	    timer_width_t elapsed = now - timer->t0;
 	    int32_t remaining = timer->dt - elapsed;
 
 	    if (remaining < min_remaining)
@@ -141,7 +141,7 @@ implementation
     fireTimers(call TimerFrom.getNow());
   }
 
-  void startTimer(uint8_t num, uint32_t t0, uint32_t dt, bool isoneshot)
+  void startTimer(uint8_t num, timer_width_t t0, timer_width_t dt, bool isoneshot)
   {
     Timer_t* timer = &m_timers[num];
     timer->t0 = t0;
@@ -151,12 +151,12 @@ implementation
     post updateFromTimer();
   }
 
-  command void Timer.startPeriodic[uint8_t num](uint32_t dt)
+  command void Timer.startPeriodic[uint8_t num](timer_width_t dt)
   {
     startTimer(num, call TimerFrom.getNow(), dt, FALSE);
   }
 
-  command void Timer.startOneShot[uint8_t num](uint32_t dt)
+  command void Timer.startOneShot[uint8_t num](timer_width_t dt)
   {
     startTimer(num, call TimerFrom.getNow(), dt, TRUE);
   }
@@ -176,27 +176,27 @@ implementation
     return m_timers[num].isoneshot;
   }
 
-  command void Timer.startPeriodicAt[uint8_t num](uint32_t t0, uint32_t dt)
+  command void Timer.startPeriodicAt[uint8_t num](timer_width_t t0, timer_width_t dt)
   {
     startTimer(num, t0, dt, FALSE);
   }
 
-  command void Timer.startOneShotAt[uint8_t num](uint32_t t0, uint32_t dt)
+  command void Timer.startOneShotAt[uint8_t num](timer_width_t t0, timer_width_t dt)
   {
     startTimer(num, t0, dt, TRUE);
   }
 
-  command uint32_t Timer.getNow[uint8_t num]()
+  command timer_width_t Timer.getNow[uint8_t num]()
   {
     return call TimerFrom.getNow();
   }
 
-  command uint32_t Timer.gett0[uint8_t num]()
+  command timer_width_t Timer.gett0[uint8_t num]()
   {
     return m_timers[num].t0;
   }
 
-  command uint32_t Timer.getdt[uint8_t num]()
+  command timer_width_t Timer.getdt[uint8_t num]()
   {
     return m_timers[num].dt;
   }
