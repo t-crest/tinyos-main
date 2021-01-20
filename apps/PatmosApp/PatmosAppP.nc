@@ -1,4 +1,5 @@
 #include "Timer.h"
+#include <stdio.h>
 
 module PatmosAppP
 {
@@ -134,10 +135,14 @@ implementation
 		if(!key1Val && oldKey1)
 		{
 			char buffer[30+1];
+			char big_buffer[100];
+
 			call UartStream.send((uint8_t*)"Enter some text (max 30 chars+\\0): ", strlen("Enter some text (max 30 chars+\\0): "));
 
-			call UartStream.receive((uint8_t*)buffer, strlen(buffer));
-			call UartStream.send((uint8_t*)buffer, strlen(buffer));
+			call UartStream.receive((uint8_t*)buffer, sizeof(buffer));
+
+			sprintf(big_buffer, "Received: %s\n", buffer);
+			call UartStream.send((uint8_t*)big_buffer, strlen(big_buffer));
 
 
 			if(led1)
